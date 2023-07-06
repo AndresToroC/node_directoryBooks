@@ -2,6 +2,7 @@ import { request, response } from 'express';
 import bcrypt from 'bcrypt'
 
 import UserModel from '../models/User';
+import { generateJwt } from '../helpers/GenerateJwt';
 
 const MSG_ERROR_ADMIN = process.env.MSG_ERROR_ADMIN;
 
@@ -23,10 +24,12 @@ export const login = async(req = request, res = response) => {
             })
         }
 
-        // TODO: Generar Token
+        // Generate Token
+        const token = await generateJwt(user.id);
 
         return res.json({
-            user
+            user,
+            token
         })
     } catch (error) {
         return res.status(400).json({
@@ -60,13 +63,14 @@ export const register = async(req = request, res = response) => {
 
         user.save();
 
-        // TODO: Generate token
+        // Generate Token
+        const token = await generateJwt(user.id);
 
         return res.json({
-            user
+            user,
+            token
         })
     } catch (error) {
-        console.log(error);
         return res.status(400).json({
             message: MSG_ERROR_ADMIN
         })

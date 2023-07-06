@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import conexDB from '../database/conex';
 import { AuthRouter } from '../router/_router';
+import { createRoles } from '../controllers/RoleController';
 
 class Server {
     constructor() {
@@ -12,6 +13,7 @@ class Server {
         this.connectionDB();
         this.middleware();
         this.router();
+        this.loadData();
     }
 
     middleware() {
@@ -31,6 +33,10 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`App execute by port: ${ this.port }`);
         })
+    }
+
+    async loadData() {
+        await createRoles()
     }
 }
 
