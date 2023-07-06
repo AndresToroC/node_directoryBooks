@@ -1,9 +1,16 @@
 import express from 'express';
+import conexDB from '../database/conex';
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
+
+        this.connectionDB();
+    }
+
+    async connectionDB() {
+        await conexDB();
     }
 
     listen() {
