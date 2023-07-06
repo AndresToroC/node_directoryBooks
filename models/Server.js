@@ -1,5 +1,8 @@
 import express from 'express';
+import cors from 'cors';
+
 import conexDB from '../database/conex';
+import { AuthRouter } from '../router/_router';
 
 class Server {
     constructor() {
@@ -7,10 +10,21 @@ class Server {
         this.port = process.env.PORT;
 
         this.connectionDB();
+        this.middleware();
+        this.router();
+    }
+
+    middleware() {
+        this.app.use(cors())
+        this.app.use(express.json())
     }
 
     async connectionDB() {
         await conexDB();
+    }
+
+    router() {
+        this.app.use('/api/auth', AuthRouter)
     }
 
     listen() {
