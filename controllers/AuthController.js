@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 
 import UserModel from '../models/User';
 import { generateJwt } from '../helpers/GenerateJwt';
+import RoleModel from '../models/Role';
 
 const MSG_ERROR_ADMIN = process.env.MSG_ERROR_ADMIN;
 
@@ -39,7 +40,7 @@ export const login = async(req = request, res = response) => {
 }
 
 export const register = async(req = request, res = response) => {
-    const { name, email, status, role, password } = req.body;
+    const { name, email, status, password } = req.body;
 
     try {
         const userEmail = await UserModel.findOne({ email });
@@ -52,8 +53,10 @@ export const register = async(req = request, res = response) => {
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
         const hash = bcrypt.hashSync(password, salt);
+        
+        const { _id: role } = await RoleModel.findOne({ name: 'user' });
 
-        const user = new UserModel({
+        const user = UserModel({
             name,
             email,
             password: hash,

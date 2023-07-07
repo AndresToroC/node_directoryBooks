@@ -1,6 +1,6 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const UserSchema = new Schema({
+const UserSchema = Schema({
     name: {
         type: String,
         required: [true, 'The name is required']
@@ -24,8 +24,18 @@ const UserSchema = new Schema({
         ref: 'roles',
         required: true
     }
+}, {
+    timestamps: true
 })
 
-const UserModel = mongoose.model('User', UserSchema);
+UserSchema.methods.toJSON = function() {
+    const { __v, _id, ...user } = this.toObject();
+
+    user.uid = _id;
+
+    return user;
+}
+
+const UserModel = model('user', UserSchema);
 
 export default UserModel
