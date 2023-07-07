@@ -12,14 +12,9 @@ export const login = async(req = request, res = response) => {
 
     try {
         const user = await UserModel.findOne({ email });
-        if (!user) {
-            return res.status(400).json({
-                message: 'The email not exist'
-            })
-        }
-
         const comparePassword = bcrypt.compareSync(password, user.password);
-        if (!comparePassword) {
+        
+        if (!user || !user.status || !comparePassword) {
             return res.status(400).json({
                 message: 'Credentials is not valid'
             })
@@ -43,13 +38,6 @@ export const register = async(req = request, res = response) => {
     const { name, email, status, password } = req.body;
 
     try {
-        const userEmail = await UserModel.findOne({ email });
-        if (userEmail) {
-            return res.status(400).json({
-                message: "Email already exists"
-            })
-        }
-
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
         const hash = bcrypt.hashSync(password, salt);
