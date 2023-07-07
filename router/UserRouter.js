@@ -6,10 +6,15 @@ import validateFields from '../middleware/ValidateFields';
 
 import { userCreate, userDelete, userGet, userGetId, userUpdate } from '../controllers/UserController';
 import { validateEmailExist, validateRoleExist, validationPasswordConfirmation } from '../helpers/Validators';
+import { validateIsAdmin } from '../middleware/ValidateRole';
 
 const router = Router();
 
-router.use(validateJwt);
+// Middleware
+router.use([
+    validateJwt,
+    validateIsAdmin
+]);
 
 // List all users
 router.get('/', userGet)

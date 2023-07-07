@@ -21,7 +21,7 @@ const UserSchema = Schema({
     },
     role: {
         type: Schema.Types.ObjectId,
-        ref: 'roles',
+        ref: 'role',
         required: true
     }
 }, {
@@ -32,6 +32,7 @@ UserSchema.methods.toJSON = function() {
     const { __v, _id, password, role, ...user } = this.toObject();
 
     user.uid = _id;
+    user.role = role;
 
     return user;
 }

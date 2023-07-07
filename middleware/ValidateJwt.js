@@ -4,6 +4,7 @@ import UserModel from '../models/User';
 const validateJwt = async(req, res, next) => {
     try {
         let token = req.headers.authorization;
+        req.uid = null;
     
         token = token.split(' ')[1];
         
@@ -16,6 +17,8 @@ const validateJwt = async(req, res, next) => {
                 message: 'Token is not valid'
             })
         }
+
+        req.uid = uid;
         
         next();
     } catch (error) {

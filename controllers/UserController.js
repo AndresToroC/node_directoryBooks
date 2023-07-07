@@ -20,6 +20,7 @@ export const userGet = async(req = request, res = response) => {
         const [totalUsers, users] = await Promise.all([
             UserModel.count(query),
             UserModel.find(query)
+                .populate('role', ['_id', 'name'])
                 .skip(Number(fromLimit))
                 .limit(Number(limit))
         ])
