@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 import conexDB from '../database/conex';
-import { AuthRouter } from '../router/_router';
+import { AuthRouter, UserRouter } from '../router/_router';
 import { createRoles } from '../controllers/RoleController';
 
 class Server {
@@ -27,6 +27,7 @@ class Server {
 
     router() {
         this.app.use('/api/auth', AuthRouter)
+        this.app.use('/api/user', UserRouter)
     }
 
     listen() {
