@@ -11,8 +11,7 @@ const UserSchema = Schema({
         unique: true
     },
     password: {
-        type: String,
-        required: [true, 'The password is required']
+        type: String
     },
     status: {
         type: Boolean,
@@ -27,6 +26,8 @@ const UserSchema = Schema({
 }, {
     timestamps: true
 })
+
+// TODO: Crear campo para saber si se autentico con google
 
 UserSchema.methods.toJSON = function() {
     const { __v, _id, password, role, ...user } = this.toObject();

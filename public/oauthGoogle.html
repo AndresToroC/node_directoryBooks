@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oauth Google</title>
+</head>
+<body>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+            fetch('http://localhost:8085/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(response)
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                sessionStorage.setItem('x-token', res.token)
+            })
+        }
+
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "624402718370-1kip2ec2vmic1r8l8s9s65gpinm6e900.apps.googleusercontent.com",
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                { theme: "outline", size: "large" }  // customization attributes
+            );
+            google.accounts.id.prompt(); // also display the One Tap dialog
+        }
+    </script>
+    <div id="buttonDiv"></div> 
+</body>
+</html>

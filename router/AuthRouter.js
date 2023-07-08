@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { login, register } from '../controllers/AuthController';
+import { authGoogle, login, register } from '../controllers/AuthController';
 import { validateEmailExist, validationPasswordConfirmation } from '../helpers/Validators';
 
 import validateFields from '../middleware/ValidateFields';
+import validateJwt from '../middleware/ValidateJwt';
 
 const router = Router();
 
@@ -23,5 +24,8 @@ router.post('/register', [
     check('email').custom(validateEmailExist),
     validateFields
 ], register)
+
+// Auth Google
+router.post('/google', authGoogle)
 
 export default router;

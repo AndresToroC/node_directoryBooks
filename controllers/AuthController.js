@@ -1,4 +1,5 @@
 import { request, response } from 'express';
+import { OAuth2Client } from 'google-auth-library'
 import bcrypt from 'bcrypt'
 
 import UserModel from '../models/User';
@@ -52,12 +53,52 @@ export const register = async(req = request, res = response) => {
             role
         })
 
-        user.save();
+        await user.save();
 
         // Generate Token
         const token = await generateJwt(user.id);
 
         return res.json({
+            user,
+            token
+        })
+    } catch (error) {
+        return res.status(400).json({
+            message: MSG_ERROR_ADMIN
+        })
+    }
+}
+
+export const authGoogle = async(req = request, res = response) => {
+    const { credential } = req.body;
+    const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+
+    try {
+        const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+    
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: GOOGLE_CLIENT_ID,
+        });
+    
+        const { name, email } = ticket.getPayload();
+    
+        let user = await UserModel.findOne({ email });
+        if (!user) {
+            const { _id: role } = await RoleModel.findOne({ name: 'user' });
+
+            user = UserModel({
+                name,
+                email,
+                role
+            })
+
+            await user.save();
+        }
+
+        const token = await generateJwt(user.id);
+    
+        res.json({
             user,
             token
         })

@@ -19,6 +19,7 @@ class Server {
     middleware() {
         this.app.use(cors())
         this.app.use(express.json())
+        this.app.use('/public', express.static('public'))
     }
 
     async connectionDB() {

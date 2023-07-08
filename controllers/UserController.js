@@ -53,7 +53,7 @@ export const userGetId = async(req = request, res = response) => {
     }
 }
 
-export const userCreate = (req = request, res = response) => {
+export const userCreate = async(req = request, res = response) => {
     const { password, ...dataUser  } = req.body;
 
     try {
@@ -65,7 +65,7 @@ export const userCreate = (req = request, res = response) => {
 
         user.password = hash;
 
-        user.save();
+        await user.save();
 
         return res.json({
             user
