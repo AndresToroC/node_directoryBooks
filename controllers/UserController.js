@@ -68,7 +68,8 @@ export const userCreate = async(req = request, res = response) => {
         await user.save();
 
         return res.json({
-            user
+            user,
+            message: 'User created successfully'
         })
     } catch (error) {
         return res.status(400).json({
@@ -95,7 +96,8 @@ export const userUpdate = async(req = request, res = response) => {
         });
 
         return res.json({
-            user
+            user,
+            message: 'User updated successfully'
         })
     } catch (error) {
         console.log(error);

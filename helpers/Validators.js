@@ -1,8 +1,6 @@
 import RoleModel from '../models/Role';
 import UserModel from '../models/User';
 
-const MSG_ERROR_ADMIN = process.env.MSG_ERROR_ADMIN;
-
 export const validationPasswordConfirmation = (value, { req }) => {
     const { password } = req.body;
 
