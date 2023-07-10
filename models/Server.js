@@ -1,4 +1,5 @@
 import express from 'express';
+import fileUpload from 'express-fileupload';
 import cors from 'cors';
 
 import conexDB from '../database/conex';
@@ -20,6 +21,14 @@ class Server {
         this.app.use(cors())
         this.app.use(express.json())
         this.app.use('/public', express.static('public'))
+        this.app.use('/files', express.static('files'))
+
+        // Use files
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }))
     }
 
     async connectionDB() {

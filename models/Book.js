@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const BookSchema = Schema({
     title: {
@@ -32,6 +32,12 @@ const BookSchema = Schema({
     },
     description: String,
 })
+
+BookSchema.methods.toJSON = function() {
+    const { __v, ...book } = this.toObject();
+
+    return book;
+}
 
 const BookModel = model('book', BookSchema);
 

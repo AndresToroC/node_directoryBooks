@@ -7,6 +7,7 @@ Directorio de libros
 - CRUD categoria de libros
 - CRUD de libros, se puede cargar varias imagenes a un libro
 - Se debe de agregar opcion para agregar a favoritos
+- Crear reportes en excel
 
 Modelos
 - Todos los modelos van a manejar campo de fecha de creacion y actualizacion

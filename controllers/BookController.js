@@ -1,6 +1,7 @@
-import { request, response } from "express";
-import BookModel from "../models/Book";
-import { Paginate } from "../helpers/Paginate";
+import { request, response } from 'express';
+import BookModel from '../models/Book';
+import { Paginate } from '../helpers/Paginate';
+import { uploadImage } from '../helpers/LoadImage';
 
 const MSG_ERROR_ADMIN = process.env.MSG_ERROR_ADMIN;
 
@@ -18,7 +19,7 @@ export const bookGet = async(req = request, res = response) => {
         const [totalBooks, books] = await Promise.all([
             BookModel.count(query),
             BookModel.find(query)
-                .populate('category')
+                .populate('category', ['id', 'name', 'status'])
                 .skip(Number(fromLimit))
                 .limit(Number(limit))
         ]);
@@ -57,7 +58,20 @@ export const bookCreate = async(req = request, res = response) => {
     const data = req.body;
 
     try {
+        // Validate files
+        let imgUrl;
+        if (req.files) {
+            try {
+                imgUrl = await uploadImage(req.files.img, undefined, 'books');
+            } catch (error) {
+                return res.status(400).json({
+                    message: error
+                })
+            }
+        }
+
         const book = BookModel(data);
+        book.imageUrl = imgUrl;
         await book.save();
 
         return res.json({
