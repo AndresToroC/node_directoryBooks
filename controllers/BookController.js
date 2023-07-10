@@ -1,7 +1,8 @@
 import { request, response } from 'express';
+
 import BookModel from '../models/Book';
 import { Paginate } from '../helpers/Paginate';
-import { uploadImage } from '../helpers/LoadImage';
+import { deleteImage, uploadImage } from '../helpers/LoadImage';
 
 const MSG_ERROR_ADMIN = process.env.MSG_ERROR_ADMIN;
 
@@ -90,12 +91,33 @@ export const bookUpdate = async(req = request, res = response) => {
     const data = req.body;
 
     try {
-        const category = await BookModel.findByIdAndUpdate(bookId, data, {
+        // Validate files
+        let imgUrl;
+        if (req.files) {
+            try {
+                const bookImg = await BookModel.findById(bookId);
+                if (bookImg.imageUrl) {
+                    deleteImage(bookImg.imageUrl, 'books');
+                }
+
+                imgUrl = await uploadImage(req.files.img, undefined, 'books');
+            } catch (error) {
+                return res.status(400).json({
+                    message: error
+                })
+            }
+        }
+
+        if (imgUrl) {
+            data.imageUrl = imgUrl;
+        }
+
+        const book = await BookModel.findByIdAndUpdate(bookId, data, {
             new: true
         });
 
         return res.json({
-            category,
+            book,
             message: 'Book updated successfully'
         })
     } catch (error) {
@@ -109,6 +131,11 @@ export const bookDelete = async(req = request, res = response) => {
     const { bookId } = req.params;
 
     try {
+        const bookImg = await BookModel.findById(bookId);
+        if (bookImg.imageUrl) {
+            deleteImage(bookImg.imageUrl, 'books');
+        }
+
         await BookModel.findByIdAndDelete(bookId);
 
         return res.json({
