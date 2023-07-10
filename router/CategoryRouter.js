@@ -9,10 +9,7 @@ import { categoryCreate, categoryDelete, categoryGet, categoryGetId, categoryUpd
 
 const router = Router();
 
-router.use([
-    validateJwt,
-    validateIsAdmin
-])
+router.use(validateJwt)
 
 router.get('/', categoryGet);
 
@@ -22,17 +19,20 @@ router.get('/:categoryId', [
 ], categoryGetId)
 
 router.post('/', [
+    validateIsAdmin,
     check('name', 'The name field is required').trim().notEmpty(),
     validateFields
 ], categoryCreate)
 
 router.put('/:categoryId', [
+    validateIsAdmin,
     check('categoryId', 'Id is not valid').isMongoId(),
     check('name', 'The name field is required').trim().notEmpty(),
     validateFields
 ], categoryUpdate)
 
 router.delete('/:categoryId', [
+    validateIsAdmin,
     check('categoryId', 'Id is not valid').isMongoId(),
     validateFields
 ], categoryDelete)

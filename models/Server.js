@@ -3,7 +3,7 @@ import cors from 'cors';
 
 import conexDB from '../database/conex';
 import { createRoles } from '../controllers/RoleController';
-import { AuthRouter, CategoryRouter, UserRouter } from '../router/_router';
+import { AuthRouter, BookRouter, CategoryRouter, UserRouter } from '../router/_router';
 
 class Server {
     constructor() {
@@ -30,6 +30,7 @@ class Server {
         this.app.use('/api/auth', AuthRouter)
         this.app.use('/api/user', UserRouter)
         this.app.use('/api/category', CategoryRouter)
+        this.app.use('/api/book', BookRouter)
     }
 
     listen() {
